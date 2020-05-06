@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "284413270579",
+    "firebase_url": "https://androidmyplace.firebaseio.com",
+    "project_id": "androidmyplace",
+    "storage_bucket": "androidmyplace.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:284413270579:android:d3bb5e71ff8eb6128f6146",
+        "android_client_info": {
+          "package_name": "com.example.myplace"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "284413270579-6o430sh0smelgcn4futdj0hggnfiu97f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBltWpJjZiJUBv78v138tWTBIhw8Fzhqcg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "284413270579-6o430sh0smelgcn4futdj0hggnfiu97f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
