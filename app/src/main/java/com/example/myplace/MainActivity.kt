@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
             loginUser()
         }
         registerButton.setOnClickListener {
+//            goToRegisterActivity()
             createUser()
         }
     }
@@ -68,7 +69,7 @@ class MainActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     Log.d("!!!", "User signed up")
                     val user = auth.currentUser
-                    goToMapActivity()
+                    goToRegisterActivity()
                 } else {
                     Log.w("!!!", "User creation failed. email: ${userEmail.text}, password: ${userPassword.text}", task.exception)
                     Toast.makeText(this, "Inloggning misslyckades.", Toast.LENGTH_SHORT).show()
@@ -87,6 +88,11 @@ class MainActivity : AppCompatActivity() {
 
     fun goToMapActivity() {
         val intent = Intent(this, MapsActivity::class.java)
+        startActivity(intent)
+    }
+
+    fun goToRegisterActivity() {
+        val intent = Intent(this, RegisterActivity::class.java)
         startActivity(intent)
     }
 }
