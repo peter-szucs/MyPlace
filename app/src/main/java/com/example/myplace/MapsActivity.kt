@@ -1,12 +1,14 @@
 package com.example.myplace
 
 //import android.widget.Toolbar
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -23,10 +25,12 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.nav_header.view.*
+import java.io.IOException
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
     NavigationView.OnNavigationItemSelectedListener {
@@ -42,9 +46,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     lateinit var drawerLayout: DrawerLayout
     lateinit var navView: NavigationView
 
-    private lateinit var addPlaceButton: Button
-
-
+    private lateinit var addPlaceButton: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +68,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         navView = findViewById(R.id.nav_view)
 
         addPlaceButton = findViewById(R.id.floatingActionButton)
+        var fromAddNewPlace: Boolean = intent.getBooleanExtra("addNewPlace", false)
+//        TODO("implement coming from addNewPlace to focus on and show info page on marker")
+        if (fromAddNewPlace) {
+
+        }
 
 
 
@@ -142,12 +149,56 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             }
         }
 
+        addPlaceButton.setOnClickListener {
+            fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
+                if (location != null) {
+                    lastLocation = location
+                    val currentLatLng = LatLng(location.latitude, location.longitude)
+//                    placeMarker(currentLatLng)
+                    val intent = Intent(this@MapsActivity, AddNewPlace::class.java)
+                    println("!!! lat: ${location.latitude}, lng: ${location.longitude}")
+                    intent.putExtra("Latitude", location.latitude).putExtra("Longitude", location.longitude)
+                    startActivity(intent)
+                }
+            }
+
+        }
+
     }
 
     private fun placeMarker(location: LatLng) {
         val markerOptions = MarkerOptions().position(location)
+//        val title = getAddress(location)
+        val title = "My Marker"
+        markerOptions.title(title)
         map.addMarker(markerOptions)
+        Toast.makeText(this, "Title: ${title}", Toast.LENGTH_SHORT).show()
     }
+
+    private fun getAddress(latLng: LatLng): String {
+        // 1
+        val geocoder = Geocoder(this)
+        val addresses: List<Address>?
+        val address: Address?
+        var addressText = ""
+
+        try {
+            // 2
+            addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+            // 3
+            if (null != addresses && !addresses.isEmpty()) {
+                address = addresses[0]
+                for (i in 0 until address.maxAddressLineIndex) {
+                    addressText += if (i == 0) address.getAddressLine(i) else "\n" + address.getAddressLine(i)
+                }
+            }
+        } catch (e: IOException) {
+            Log.e("MapsActivity", e.localizedMessage)
+        }
+
+        return addressText
+    }
+
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
