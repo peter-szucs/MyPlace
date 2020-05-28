@@ -57,6 +57,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         mapFragment.getMapAsync(this)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+        val dataInit = FriendsDataManager.friendsList
+
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
@@ -210,7 +212,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 Toast.makeText(this, "My Places Clicked", Toast.LENGTH_SHORT).show()
             }
             R.id.nav_friends -> {
-                Toast.makeText(this, "Friends Clicked", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, FriendsListActivity::class.java)
+                startActivity(intent)
             }
             R.id.nav_logout -> {
                 Toast.makeText(this, "Sign out Clicked", Toast.LENGTH_SHORT).show()
