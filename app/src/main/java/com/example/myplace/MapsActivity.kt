@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
@@ -27,12 +28,14 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.squareup.picasso.Picasso
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
+import kotlinx.android.synthetic.main.activity_maps.*
 import kotlinx.android.synthetic.main.nav_header.view.*
 import java.io.IOException
 
@@ -72,7 +75,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
-        storageRef = FirebaseStorage.getInstance().getReference().child("profileImages");
+        storageRef = FirebaseStorage.getInstance().reference.child("profileImages")
 
         toolbar = findViewById(R.id.toolbar)
 
@@ -105,15 +108,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         ref.get().addOnSuccessListener { documentSnapshot ->
             userInfo = documentSnapshot.toObject(User::class.java)
 //            println("!!! ${userInfo?.firstName}, friendlist: ${userInfo?.friendsList}")
-            navView.user_name_text_view.text = "${userInfo?.username}"
-            navView.full_name_text_view.text = "${userInfo?.firstName} ${userInfo?.lastName}"
+            navView.user_name_text_view_navhead.text = "${userInfo?.username}"
+            navView.full_name_text_view_navhead.text = "${userInfo?.firstName} ${userInfo?.lastName}"
 
             Picasso.with(this)
                 .load(userInfo?.imageUrl)
                 .resize(400, 400)
                 .centerInside()
                 .transform(CropCircleTransformation())
-                .into(navView.profileImage)
+                .into(navView.profile_image_view_navhead)
 
 //            Picasso.with(this)
 //                .load(userInfo?.imageUrl)
@@ -291,8 +294,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_profile -> {
-                Log.d("!!!", "Tryckt!!!!")
-                Toast.makeText(this, "Profile Clicked", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, ProfileActivity::class.java)
+                startActivity(intent)
+//                Toast.makeText(this, "Profile Clicked", Toast.LENGTH_SHORT).show()
             }
             R.id.nav_my_places -> {
                 Toast.makeText(this, "My Places Clicked", Toast.LENGTH_SHORT).show()
@@ -302,11 +306,29 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 startActivity(intent)
             }
             R.id.nav_logout -> {
-                Toast.makeText(this, "Sign out Clicked", Toast.LENGTH_SHORT).show()
+                val alertDialogBuilder = AlertDialog.Builder(this)
+                alertDialogBuilder.setTitle("Logga ut")
+                    .setMessage("Vill du verkligen logga ut?")
+                    .setPositiveButton("Ja") { dialog, id ->
+                        Snackbar.make(nav_view, "Du är nu utloggad", Snackbar.LENGTH_SHORT).show()
+                        signOut()
+                    }
+                    .setNegativeButton("Ångra") { dialog, id -> dialog.cancel()
+                    }
+                val alert = alertDialogBuilder.create()
+                alert.show()
+//                Toast.makeText(this, "Sign out Clicked", Toast.LENGTH_SHORT).show()
             }
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun signOut() {
+        auth.signOut()
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
     }
 
 

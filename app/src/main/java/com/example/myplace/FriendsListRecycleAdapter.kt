@@ -38,7 +38,7 @@ class FriendsListRecycleAdapter(private val context: Context, private val friend
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val userImage = itemView.findViewById<ImageView>(R.id.userImage)
-        val userNameTextView = itemView.findViewById<TextView>(R.id.userNameTextView)
+        val userImage = itemView.findViewById<ImageView>(R.id.user_image_view_friendlist)
+        val userNameTextView = itemView.findViewById<TextView>(R.id.username_text_view_profile)
     }
 }

@@ -66,7 +66,7 @@
         app:layout_constraintTop_toBottomOf="@+id/upload_progress_bar" />
 
     <ImageView
-        android:id="@+id/profileImage"
+        android:id="@+id/profile_image_view_navhead"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="140dp"
@@ -86,6 +86,6 @@
         android:layout_marginTop="41dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileImage" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_image_view_navhead" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

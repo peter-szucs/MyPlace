@@ -46,7 +46,7 @@ class RegisterActivity : AppCompatActivity() {
         firstName = findViewById(R.id.firstNameEditText)
         lastName = findViewById(R.id.lastNameEditText)
         username = findViewById(R.id.usernameEditText)
-        profilePicture = findViewById(R.id.profileImage)
+        profilePicture = findViewById(R.id.profile_image_view_navhead)
         progressBar = findViewById(R.id.upload_progress_bar)
         userInfo = User()
 

@@ -10,14 +10,14 @@
     android:paddingBottom="15dp">
 
     <ImageView
-        android:id="@+id/profileImage"
+        android:id="@+id/profile_image_view_navhead"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
         app:srcCompat="@mipmap/ic_launcher" />
 
     <TextView
-        android:id="@+id/user_name_text_view"
+        android:id="@+id/user_name_text_view_navhead"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Username"
@@ -25,7 +25,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/full_name_text_view"
+        android:id="@+id/full_name_text_view_navhead"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Full name"
