@@ -17,17 +17,18 @@
         app:srcCompat="@mipmap/ic_launcher" />
 
     <TextView
-        android:id="@+id/profileName"
+        android:id="@+id/user_name_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Title"
+        android:text="Username"
         android:textColor="#FFFFFF"
         android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/full_name_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="This is our navigation drawer"
+        android:text="Full name"
         android:textColor="#FFFFFF" />
 
 </LinearLayout>

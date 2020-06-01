@@ -29,6 +29,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.squareup.picasso.Picasso
+import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.nav_header.view.*
 import java.io.IOException
 
@@ -41,6 +45,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
+    private lateinit var storageRef: StorageReference
 
     lateinit var toolbar: Toolbar
     lateinit var drawerLayout: DrawerLayout
@@ -61,6 +66,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
+        storageRef = FirebaseStorage.getInstance().getReference().child("profileImages");
 
         toolbar = findViewById(R.id.toolbar)
 
@@ -93,7 +99,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         ref.get().addOnSuccessListener { documentSnapshot ->
             userInfo = documentSnapshot.toObject(User::class.java)
             println("!!! ${userInfo?.firstName}, friendlist: ${userInfo?.friendsList}")
-            navView.profileName.text = "${userInfo?.firstName} ${userInfo?.lastName}"
+            navView.user_name_text_view.text = "${userInfo?.username}"
+            navView.full_name_text_view.text = "${userInfo?.firstName} ${userInfo?.lastName}"
+
+            Picasso.with(this)
+                .load(userInfo?.imageUrl)
+                .resize(400, 400)
+                .centerInside()
+                .transform(CropCircleTransformation())
+                .into(navView.profileImage)
+
+//            Picasso.with(this)
+//                .load(userInfo?.imageUrl)
+//                .fit()
+//                .centerCrop()
+//                .into(navView.profileImage)
+
         }
 
 

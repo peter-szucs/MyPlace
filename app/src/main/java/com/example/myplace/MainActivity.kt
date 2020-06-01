@@ -1,8 +1,11 @@
 package com.example.myplace
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -17,6 +20,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var userEmail: EditText
     private lateinit var userPassword: EditText
 
+    private lateinit var constraintLayout: View
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -28,6 +33,7 @@ class MainActivity : AppCompatActivity() {
 
         var loginButton = findViewById<Button>(R.id.loginButton)
         var registerButton = findViewById<Button>(R.id.registerButton)
+        constraintLayout = findViewById(R.id.layout_main_activity)
 
         loginButton.setOnClickListener {
             loginUser()
@@ -36,6 +42,11 @@ class MainActivity : AppCompatActivity() {
 //            goToRegisterActivity()
             createUser()
         }
+
+        constraintLayout.setOnClickListener {
+            hideKeyboard(it)
+        }
+
     }
     override fun onStart() {
         super.onStart()
@@ -44,9 +55,18 @@ class MainActivity : AppCompatActivity() {
         updateUI(currentUser)
     }
 
+    fun hideKeyboard(view: View) {
+        val im: InputMethodManager =
+            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        im.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
     fun loginUser() {
-        if (userEmail.text.toString().isEmpty() || userPassword.text.toString().isEmpty())
+        if (userEmail.text.toString().isEmpty() || userPassword.text.toString().isEmpty()) {
+            Toast.makeText(this, "Var vänlig fyll i alla fält", Toast.LENGTH_SHORT).show()
             return
+        }
+
         auth.signInWithEmailAndPassword(userEmail.text.toString(), userPassword.text.toString())
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
@@ -95,4 +115,5 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, RegisterActivity::class.java)
         startActivity(intent)
     }
+
 }
