@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
+import jp.wasabeef.picasso.transformations.CropCircleTransformation
 
 class FriendsListRecycleAdapter(private val context: Context, private val friends: MutableList<User?>) : RecyclerView.Adapter<FriendsListRecycleAdapter.ViewHolder>() {
 
@@ -25,6 +27,13 @@ class FriendsListRecycleAdapter(private val context: Context, private val friend
     override fun onBindViewHolder(holder: FriendsListRecycleAdapter.ViewHolder, position: Int) {
         val user = friends[position]
         holder.userNameTextView.text = user?.username.toString()
+        Picasso.with(context)
+            .load(user?.imageUrl)
+            .fit()
+//            .resize(400, 400)
+            .centerInside()
+            .transform(CropCircleTransformation())
+            .into(holder.userImage)
         println("!!! ADAPTER: friendsSize: ${friends.size}")
     }
 

@@ -1,10 +1,13 @@
 package com.example.myplace
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -25,7 +28,6 @@ class AddNewPlace : AppCompatActivity() {
     private lateinit var title: EditText
     private lateinit var description: EditText
 
-
 //    private lateinit var text: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,8 +44,11 @@ class AddNewPlace : AppCompatActivity() {
 
         title = findViewById(R.id.titleEditText)
         description = findViewById(R.id.descriptionEditText)
-//        text = findViewById(R.id.textView)
-//        text.text = "Lat: ${currentLocation.latitude}, Lng: ${currentLocation.longitude}"
+
+        findViewById<View>(R.id.layout_add_new_place).setOnClickListener {
+            hideKeyboard(it)
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -69,11 +74,17 @@ class AddNewPlace : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    fun createPlace() {
+    fun hideKeyboard(view: View) {
+        val im: InputMethodManager =
+            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        im.hideSoftInputFromWindow(view.windowToken, 0)
+    }
 
+    fun createPlace() {
         newPlace.title = title.text.toString()
         newPlace.description = description.text.toString()
-        newPlace.location = currentLocation
+        newPlace.latitude = currentLocation.latitude
+        newPlace.longitude = currentLocation.longitude
 
         val user = auth.currentUser ?: return
         db.collection("users").document(user.uid).collection("places").add(newPlace).addOnSuccessListener {

@@ -47,7 +47,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var db: FirebaseFirestore
     private lateinit var storageRef: StorageReference
 
-    lateinit var toolbar: Toolbar
+    private lateinit var places: MutableList<Place?>
+
+    private var userInfo: User? = null
+
+    private lateinit var toolbar: Toolbar
     lateinit var drawerLayout: DrawerLayout
     lateinit var navView: NavigationView
 
@@ -63,6 +67,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         val dataInit = FriendsDataManager.friendsList
+        places = listOf<Place>().toMutableList()
+
 
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
@@ -93,12 +99,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     private fun setDrawerInfo() {
-        var userInfo: User?
+//        var userInfo: User?
         val user = auth.currentUser ?: return
         val ref = db.collection("users").document(user.uid)
         ref.get().addOnSuccessListener { documentSnapshot ->
             userInfo = documentSnapshot.toObject(User::class.java)
-            println("!!! ${userInfo?.firstName}, friendlist: ${userInfo?.friendsList}")
+//            println("!!! ${userInfo?.firstName}, friendlist: ${userInfo?.friendsList}")
             navView.user_name_text_view.text = "${userInfo?.username}"
             navView.full_name_text_view.text = "${userInfo?.firstName} ${userInfo?.lastName}"
 
@@ -171,12 +177,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
             }
         }
+        val user = auth.currentUser ?: return
+        fetchMarkers(user.uid)
 
         addPlaceButton.setOnClickListener {
             fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
                 if (location != null) {
                     lastLocation = location
                     val currentLatLng = LatLng(location.latitude, location.longitude)
+                    getAddress(currentLatLng)
 //                    placeMarker(currentLatLng)
                     val intent = Intent(this@MapsActivity, AddNewPlace::class.java)
                     println("!!! lat: ${location.latitude}, lng: ${location.longitude}")
@@ -187,15 +196,66 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         }
 
+
     }
 
-    private fun placeMarker(location: LatLng) {
+    private fun fetchMarkers(uid: String) {
+        val ref = db.collection("users").document(uid).collection("places")
+        ref.addSnapshotListener { snapshot, e ->
+            if (snapshot != null) {
+                places.clear()
+                for (document in snapshot.documents) {
+                    val newPlace = document.toObject(Place::class.java)
+                    if (newPlace != null) {
+                        println("!!! LatLng: ${newPlace.longitude}")
+                        places.add(newPlace)
+                        val latLng = newPlace.longitude?.let {
+                            newPlace.latitude?.let { it1 ->
+                                convertLatLng(
+                                    it1,
+                                    it
+                                )
+                            }
+                        }
+                        newPlace.title?.let {
+                            if (latLng != null) {
+                                placeMarker(latLng, it)
+                            }
+                        }
+                    }
+
+                }
+
+            }
+//            placeMarkersFromList(places)
+
+        }
+//        ref.get().addOnSuccessListener {
+//            for document in it.documents {
+//
+//            }
+//        }
+
+    }
+
+    private fun convertLatLng(lat: Double, lng: Double) : LatLng {
+        return LatLng(lat, lng)
+
+    }
+
+//    private fun placeMarkersFromList(placeList: MutableList<Place>) {
+//        for (place in placeList) {
+//            place.title?.let { place.location?.let { it1 -> placeMarker(it1, it) } }
+//        }
+//    }
+
+    private fun placeMarker(location: LatLng, title: String) {
         val markerOptions = MarkerOptions().position(location)
 //        val title = getAddress(location)
-        val title = "My Marker"
+//        val title = "My Marker"
         markerOptions.title(title)
         map.addMarker(markerOptions)
-        Toast.makeText(this, "Title: ${title}", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(this, "Title: ${title}", Toast.LENGTH_SHORT).show()
     }
 
     private fun getAddress(latLng: LatLng): String {
@@ -213,11 +273,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 address = addresses[0]
                 for (i in 0 until address.maxAddressLineIndex) {
                     addressText += if (i == 0) address.getAddressLine(i) else "\n" + address.getAddressLine(i)
+                    val test = address.getAddressLine(i).toString()
+                    println("!!!Adress: ${test}")
                 }
             }
         } catch (e: IOException) {
             Log.e("MapsActivity", e.localizedMessage)
         }
+        Log.d("!!!LOG", addressText)
+        println("!!!AdressFull: ${addressText}")
+        Toast.makeText(this, "${addressText}", Toast.LENGTH_SHORT).show()
 
         return addressText
     }
