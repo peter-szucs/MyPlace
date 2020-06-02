@@ -101,6 +101,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        setDrawerInfo()
+    }
+
     private fun setDrawerInfo() {
 //        var userInfo: User?
         val user = auth.currentUser ?: return
