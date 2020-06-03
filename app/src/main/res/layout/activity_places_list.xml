@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PlacesListActivity">
+
+    <ImageView
+        android:id="@+id/profile_image_placelist"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="17dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_profile" />
+
+    <TextView
+        android:id="@+id/username_text_view_placelist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="54dp"
+        android:layout_marginTop="37dp"
+        android:text="Username"
+        android:textSize="24sp"
+        app:layout_constraintStart_toEndOf="@+id/profile_image_placelist"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/shared_places_text_view_placelist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="54dp"
+        android:layout_marginTop="9dp"
+        android:text="Nr of places shared"
+        app:layout_constraintStart_toEndOf="@+id/profile_image_placelist"
+        app:layout_constraintTop_toBottomOf="@+id/username_text_view_placelist" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/placeslist_recycler_view"
+        android:layout_width="410dp"
+        android:layout_height="618dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_image_placelist"
+        tools:listitem="@layout/placeslist_list_item"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

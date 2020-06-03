@@ -73,7 +73,11 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         goToMyPlacesButton.setOnClickListener {
-            println("!!! To My Places Button Clicked!")
+            val intent = Intent(this, PlacesListActivity::class.java)
+            val userUid = auth.currentUser?.uid
+            intent.putExtra("uid", userUid).putExtra("user", userInfo)
+            startActivity(intent)
+//            println("!!! To My Places Button Clicked!")
         }
 
         profileSaveButton.setOnClickListener {
@@ -162,6 +166,7 @@ class ProfileActivity : AppCompatActivity() {
             .update("imageUrl", imageUrl)
             .addOnSuccessListener {
                 Snackbar.make(profile_layout, "Ny profilbild sparad", Snackbar.LENGTH_SHORT).show()
+                profileSaveButton.toggleVisibility()
             }
     }
 

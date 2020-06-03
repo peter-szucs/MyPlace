@@ -60,6 +60,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     private lateinit var addPlaceButton: FloatingActionButton
 
+    private lateinit var userUid: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
@@ -109,6 +111,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private fun setDrawerInfo() {
 //        var userInfo: User?
         val user = auth.currentUser ?: return
+        userUid = user.uid
         val ref = db.collection("users").document(user.uid)
         ref.get().addOnSuccessListener { documentSnapshot ->
             userInfo = documentSnapshot.toObject(User::class.java)
@@ -135,18 +138,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     }
 
-
-
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
 
@@ -215,7 +206,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 for (document in snapshot.documents) {
                     val newPlace = document.toObject(Place::class.java)
                     if (newPlace != null) {
-                        println("!!! LatLng: ${newPlace.longitude}")
+//                        println("!!! LatLng: ${newPlace.longitude}")
                         places.add(newPlace)
                         val latLng = newPlace.longitude?.let {
                             newPlace.latitude?.let { it1 ->
@@ -304,7 +295,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 //                Toast.makeText(this, "Profile Clicked", Toast.LENGTH_SHORT).show()
             }
             R.id.nav_my_places -> {
-                Toast.makeText(this, "My Places Clicked", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, PlacesListActivity::class.java)
+                intent.putExtra("uid", userUid).putExtra("user", userInfo)
+                startActivity(intent)
+//                Toast.makeText(this, "My Places Clicked", Toast.LENGTH_SHORT).show()
             }
             R.id.nav_friends -> {
                 val intent = Intent(this, FriendsListActivity::class.java)

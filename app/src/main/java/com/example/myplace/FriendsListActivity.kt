@@ -15,6 +15,7 @@ class FriendsListActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
 
+
     private lateinit var friendList: MutableList<User?>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +61,7 @@ class FriendsListActivity : AppCompatActivity() {
                         dbRef.document(friendID).addSnapshotListener { snapshot, e ->
                             val friend = snapshot?.toObject(User::class.java)
                             friendList.add(friend)
-                            println("!!! ${friend?.username}")
+//                            println("!!! ${friend?.username}")
                             recyclerView.adapter?.notifyDataSetChanged()
 
                         }
@@ -86,7 +87,10 @@ class FriendsListActivity : AppCompatActivity() {
                         dbRef.document(friendID).get().addOnSuccessListener {
                             val friend = it.toObject(User::class.java)
                             friendList.add(friend)
-                            println("!!! ${friend?.username}")
+//                            println("!!! ${friend?.username}")
+                            friendList.sortBy { userUserName ->
+                                userUserName?.username
+                            }
                             recyclerView.adapter?.notifyDataSetChanged()
                         }
                     }
