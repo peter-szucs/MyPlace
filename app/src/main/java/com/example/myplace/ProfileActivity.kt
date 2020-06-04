@@ -45,6 +45,8 @@ class ProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
+        val actionBar = supportActionBar
+        actionBar?.title = "Profil"
 
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
@@ -74,8 +76,7 @@ class ProfileActivity : AppCompatActivity() {
 
         goToMyPlacesButton.setOnClickListener {
             val intent = Intent(this, PlacesListActivity::class.java)
-            val userUid = auth.currentUser?.uid
-            intent.putExtra("uid", userUid).putExtra("user", userInfo)
+            intent.putExtra("user", userInfo)
             startActivity(intent)
 //            println("!!! To My Places Button Clicked!")
         }
@@ -122,7 +123,8 @@ class ProfileActivity : AppCompatActivity() {
                 profileFullNameTextView.text = concatenatedName
                 val stamp = Timestamp(user.metadata!!.creationTimestamp)
                 val date = Date(stamp.time)
-                profileCreationDateTextView.text = "Skapad: ${date}"
+                val concatenatedCreationDate = "Skapad: $date"
+                profileCreationDateTextView.text = concatenatedCreationDate
         } else {
                 println("!!! No user found")
             }

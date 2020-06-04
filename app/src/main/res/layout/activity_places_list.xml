@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/profile_image_placelist"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginStart="17dp"
         android:layout_marginTop="17dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,12 +39,27 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/placeslist_recycler_view"
-        android:layout_width="410dp"
-        android:layout_height="618dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/show_all_on_map_button_placeslist"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profile_image_placelist"
-        tools:listitem="@layout/placeslist_list_item"/>
+        tools:listitem="@layout/placeslist_list_item" />
+
+    <Button
+        android:id="@+id/show_all_on_map_button_placeslist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="120dp"
+        android:layout_marginEnd="121dp"
+        android:layout_marginBottom="32dp"
+        android:backgroundTint="@color/colorAccent"
+        android:text="Visa alla på kartan"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

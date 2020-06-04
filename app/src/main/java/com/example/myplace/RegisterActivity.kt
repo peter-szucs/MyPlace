@@ -90,6 +90,8 @@ class RegisterActivity : AppCompatActivity() {
 
             Picasso.with(this).load(selectedPhotoUri)
                 .transform(CropCircleTransformation())
+                .resize(200, 200)
+                .centerCrop()
                 .into(profilePicture)
 
 //            val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedPhotoUri)

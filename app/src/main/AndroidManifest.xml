@@ -16,7 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PlacesListActivity"></activity>
+        <activity android:name=".PlaceDetailActivity"></activity>
+        <activity android:name=".PlacesListActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".FriendsListActivity" />
         <activity android:name=".AddNewPlace" />

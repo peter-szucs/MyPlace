@@ -1,6 +1,7 @@
 package com.example.myplace
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,18 +27,29 @@ class FriendsListRecycleAdapter(private val context: Context, private val friend
 
     override fun onBindViewHolder(holder: FriendsListRecycleAdapter.ViewHolder, position: Int) {
         val user = friends[position]
-        holder.userNameTextView.text = user?.username.toString()
-        Picasso.with(context)
-            .load(user?.imageUrl)
-            .resize(100, 100)
-            .centerInside()
-            .transform(CropCircleTransformation())
-            .into(holder.userImage)
-        println("!!! ADAPTER: friendsSize: ${friends.size}")
+        if (user != null) {
+            holder.userNameTextView.text = user.username.toString()
+            Picasso.with(context)
+                .load(user?.imageUrl)
+                .resize(100, 100)
+                .centerInside()
+                .transform(CropCircleTransformation())
+                .into(holder.userImage)
+            holder.friendUserObject = user
+        }
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val userImage = itemView.findViewById<ImageView>(R.id.user_image_view_friendlist)
         val userNameTextView = itemView.findViewById<TextView>(R.id.username_text_view_profile)
+        var friendUserObject = User()
+
+        init {
+            itemView.setOnClickListener {
+                val intent = Intent(context, PlacesListActivity::class.java)
+                intent.putExtra("user", friendUserObject)
+                context.startActivity(intent)
+            }
+        }
     }
 }

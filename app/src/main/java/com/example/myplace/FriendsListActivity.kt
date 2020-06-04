@@ -21,6 +21,8 @@ class FriendsListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_friends_list)
+        val actionBar = supportActionBar
+        actionBar?.title = "Vänner"
 
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
@@ -87,6 +89,7 @@ class FriendsListActivity : AppCompatActivity() {
                         dbRef.document(friendID).get().addOnSuccessListener {
                             val friend = it.toObject(User::class.java)
                             friendList.add(friend)
+//                            println("!!! ${friend?.uid}")
 //                            println("!!! ${friend?.username}")
                             friendList.sortBy { userUserName ->
                                 userUserName?.username

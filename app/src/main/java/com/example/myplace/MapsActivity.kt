@@ -60,8 +60,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     private lateinit var addPlaceButton: FloatingActionButton
 
-    private lateinit var userUid: String
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
@@ -71,7 +69,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         mapFragment.getMapAsync(this)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        val dataInit = FriendsDataManager.friendsList
+//        val dataInit = FriendsDataManager.friendsList
         places = listOf<Place>().toMutableList()
 
 
@@ -111,7 +109,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private fun setDrawerInfo() {
 //        var userInfo: User?
         val user = auth.currentUser ?: return
-        userUid = user.uid
         val ref = db.collection("users").document(user.uid)
         ref.get().addOnSuccessListener { documentSnapshot ->
             userInfo = documentSnapshot.toObject(User::class.java)
@@ -273,15 +270,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 for (i in 0 until address.maxAddressLineIndex) {
                     addressText += if (i == 0) address.getAddressLine(i) else "\n" + address.getAddressLine(i)
                     val test = address.getAddressLine(i).toString()
-                    println("!!!Adress: ${test}")
+                    println("!!!Adress: $test")
                 }
             }
         } catch (e: IOException) {
             Log.e("MapsActivity", e.localizedMessage)
         }
         Log.d("!!!LOG", addressText)
-        println("!!!AdressFull: ${addressText}")
-        Toast.makeText(this, "${addressText}", Toast.LENGTH_SHORT).show()
+        println("!!!AdressFull: $addressText")
+        Toast.makeText(this, addressText, Toast.LENGTH_SHORT).show()
 
         return addressText
     }
@@ -296,7 +293,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             }
             R.id.nav_my_places -> {
                 val intent = Intent(this, PlacesListActivity::class.java)
-                intent.putExtra("uid", userUid).putExtra("user", userInfo)
+                intent.putExtra("user", userInfo)
                 startActivity(intent)
 //                Toast.makeText(this, "My Places Clicked", Toast.LENGTH_SHORT).show()
             }

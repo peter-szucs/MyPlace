@@ -25,26 +25,25 @@ class PlacesListActivity : AppCompatActivity() {
     private lateinit var profileUsername: TextView
     private lateinit var profileSharedPlaceAmount: TextView
 
-    private lateinit var places: MutableList<Place?>
-    private lateinit var uid: String
+    private val places: MutableList<Place> = mutableListOf()
     private lateinit var userInfo: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_places_list)
 
-        val intentUid: String? = intent.getStringExtra("uid")
         val intentUser: User = intent.getSerializableExtra("user") as User
         userInfo = intentUser
-        if (intentUid != null) {
-            uid = intentUid
-        }
+
+
+        val actionBar = supportActionBar
+        actionBar?.title = userInfo.username
 
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
         storageRef = FirebaseStorage.getInstance().reference.child("profileImages")
 
-        places = listOf<Place>().toMutableList()
+//        places = mutableListOf(Place("Test"), Place("Test2"))
 
         placeslistRecyclerView = findViewById(R.id.placeslist_recycler_view)
         placeslistRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -55,7 +54,7 @@ class PlacesListActivity : AppCompatActivity() {
         profileSharedPlaceAmount = findViewById(R.id.shared_places_text_view_placelist)
 
 //        fetchUserInfo(intentUid)
-        fetchPlaces(uid)
+        userInfo.uid?.let { fetchPlaces(it) }
         setContent()
     }
 
@@ -66,14 +65,17 @@ class PlacesListActivity : AppCompatActivity() {
 
     private fun fetchPlaces(uid: String) {
         db.collection("users").document(uid).collection("places").get().addOnSuccessListener {
-            places = it.toObjects(Place::class.java)
-            println("!!! nr of places: ${places.size}")
-            for (place in places) {
-                println("!!! ${place?.title}")
-                placeslistRecyclerView.adapter?.notifyDataSetChanged()
-            }
+            places.clear()
+//            places = it.toObjects(Place::class.java)
+            places.addAll(it.toObjects(Place::class.java))
+//            println("!!! nr of places: ${places.size}")
+//            for (place in places) {
+//                println("!!! ${place.title}")
+////                placeslistRecyclerView.adapter?.notifyDataSetChanged()
+//            }
             val concatenatedSharedPlacesText = "Antal platser: ${places.size}"
             profileSharedPlaceAmount.text = concatenatedSharedPlacesText
+            println("!!! ${placeslistRecyclerView.adapter}")
             placeslistRecyclerView.adapter?.notifyDataSetChanged()
         }
     }
