@@ -75,7 +75,7 @@ class PlacesListActivity : AppCompatActivity() {
 //            }
             val concatenatedSharedPlacesText = "Antal platser: ${places.size}"
             profileSharedPlaceAmount.text = concatenatedSharedPlacesText
-            println("!!! ${placeslistRecyclerView.adapter}")
+//            println("!!! ${placeslistRecyclerView.adapter}")
             placeslistRecyclerView.adapter?.notifyDataSetChanged()
         }
     }

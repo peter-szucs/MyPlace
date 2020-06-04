@@ -91,8 +91,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         }
 
-
-
         val toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
@@ -112,7 +110,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val ref = db.collection("users").document(user.uid)
         ref.get().addOnSuccessListener { documentSnapshot ->
             userInfo = documentSnapshot.toObject(User::class.java)
-//            println("!!! ${userInfo?.firstName}, friendlist: ${userInfo?.friendsList}")
             navView.user_name_text_view_navhead.text = "${userInfo?.username}"
             navView.full_name_text_view_navhead.text = "${userInfo?.firstName} ${userInfo?.lastName}"
 
@@ -122,12 +119,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 .centerInside()
                 .transform(CropCircleTransformation())
                 .into(navView.profile_image_view_navhead)
-
-//            Picasso.with(this)
-//                .load(userInfo?.imageUrl)
-//                .fit()
-//                .centerCrop()
-//                .into(navView.profileImage)
 
         }
 
@@ -145,6 +136,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         map.uiSettings.isZoomControlsEnabled = false
         map.setOnMarkerClickListener(this)
+        map.setOnMapLongClickListener { latLng ->
+            map.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+            val getCoordinates = LatLng(latLng.latitude, latLng.longitude)
+        }
 
         setUpMap()
 
@@ -177,6 +172,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         fetchMarkers(user.uid)
 
         addPlaceButton.setOnClickListener {
+            // TODO: kolla om man långtryckt på kartan och använd i såna fall den markern som location
             fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
                 if (location != null) {
                     lastLocation = location
@@ -196,6 +192,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     private fun fetchMarkers(uid: String) {
+        map.clear()
         val ref = db.collection("users").document(uid).collection("places")
         ref.addSnapshotListener { snapshot, e ->
             if (snapshot != null) {
