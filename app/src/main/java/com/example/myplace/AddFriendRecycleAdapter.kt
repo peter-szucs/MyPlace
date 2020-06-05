@@ -37,6 +37,7 @@ class AddFriendRecycleAdapter(private val context: Context, private val searchLi
             .transform(CropCircleTransformation())
             .into(holder.userImage)
         holder.friendUserObject = user
+
     }
 
     override fun getFilter(): Filter {
@@ -75,7 +76,7 @@ class AddFriendRecycleAdapter(private val context: Context, private val searchLi
             itemView.setOnClickListener {
                 val builder = AlertDialog.Builder(context)
                 builder.setTitle("Lägg till vän")
-                    .setMessage("Vill du verkligen lägga till ${friendUserObject.username} som vän?")
+                    .setMessage("Vill du skicka en vänförfrågning till ${friendUserObject.username}?")
                     .setPositiveButton("Ja") { dialog, which ->
                         Toast.makeText(context, "Tryckte JA", Toast.LENGTH_SHORT).show()
                     }
