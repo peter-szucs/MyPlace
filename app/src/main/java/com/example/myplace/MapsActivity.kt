@@ -60,6 +60,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     private lateinit var addPlaceButton: FloatingActionButton
 
+    private var intentUser: User? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
@@ -71,7 +73,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
 //        val dataInit = FriendsDataManager.friendsList
         places = listOf<Place>().toMutableList()
-
+//        var intentUserTemp = intent.getSerializableExtra("intentUser") as User
+//        intentUser = intentUserTemp
 
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
@@ -171,6 +174,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
         val user = auth.currentUser ?: return
         fetchMarkers(user.uid)
+//        if (intentUser != null) {
+//            intentUser!!.uid?.let { fetchMarkers(it) }
+//        } else {
+//            fetchMarkers(user.uid)
+//        }
 
         addPlaceButton.setOnClickListener {
             // TODO: kolla om man långtryckt på kartan och använd i såna fall den markern som location

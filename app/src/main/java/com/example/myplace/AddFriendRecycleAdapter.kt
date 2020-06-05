@@ -2,6 +2,7 @@ package com.example.myplace
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -79,6 +80,9 @@ class AddFriendRecycleAdapter(private val context: Context, private val searchLi
                     .setMessage("Vill du skicka en vänförfrågning till ${friendUserObject.username}?")
                     .setPositiveButton("Ja") { dialog, which ->
                         Toast.makeText(context, "Tryckte JA", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(context, FriendsListActivity::class.java)
+                        intent.putExtra("fromAddUser", friendUserObject.uid).putExtra("fromAddBool", true)
+                        context.startActivity(intent)
                     }
                     .setNegativeButton("Avbryt") { dialog, which ->
 

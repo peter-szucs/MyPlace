@@ -27,6 +27,9 @@ class FriendsListActivity : AppCompatActivity() {
         val actionBar = supportActionBar
         actionBar?.title = "Vänner"
 
+        val fromAddUserUid: String? = intent.getStringExtra("fromAddUser")
+        val fromAddBool = intent.getBooleanExtra("fromAddBool", false)
+
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
@@ -35,6 +38,13 @@ class FriendsListActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.friendlistRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = FriendsListRecycleAdapter(this, friendList)
+
+        if (fromAddBool) {
+            if (fromAddUserUid != null) {
+                println("!!! Det Funka")
+                addFriendRequest(fromAddUserUid)
+            }
+        }
 
 
         getFriendsList()
@@ -94,5 +104,37 @@ class FriendsListActivity : AppCompatActivity() {
 
         }
 //        var friendsIDList = listOf<String>()
+    }
+
+    private fun addFriendRequest(uid: String) {
+
+        val user = auth.currentUser ?: return
+        val dbRef = db.collection("friendrequests").document(user.uid)
+        dbRef.addSnapshotListener { snapshot, e ->
+            if (snapshot != null) {
+                var requestList = snapshot?.toObject(FriendRequest::class.java)
+                var tempList = requestList?.requestList
+                tempList?.add(uid)
+                val data = tempList?.let { FriendRequest(it) }
+                if (data != null) {
+                    dbRef.set(data).addOnSuccessListener {
+                        println("!!! Skapat ny vänförfrågan")
+                    }
+                        .addOnFailureListener {
+                            println("!!! $e")
+                        }
+                }
+            } else {
+                val dataList = mutableListOf(uid)
+                val data = FriendRequest()
+                data.requestList = dataList
+                dbRef.set(data).addOnSuccessListener {
+                    println("!!! Skapade ny vän för första gången")
+                }
+                    .addOnFailureListener {
+                        println("!!! $e")
+                    }
+            }
+        }
     }
 }
