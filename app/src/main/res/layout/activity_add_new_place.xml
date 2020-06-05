@@ -62,7 +62,7 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/add_image_new_place"
         android:layout_width="65dp"
         android:layout_height="65dp"
         android:layout_marginStart="16dp"
@@ -79,7 +79,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="66dp"
         android:text="Lägg till foto..."
-        app:layout_constraintBottom_toBottomOf="@+id/imageView"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintBottom_toBottomOf="@+id/add_image_new_place"
+        app:layout_constraintStart_toEndOf="@+id/add_image_new_place"
         app:layout_constraintTop_toBottomOf="@+id/editTagsButton" />
 </androidx.constraintlayout.widget.ConstraintLayout>

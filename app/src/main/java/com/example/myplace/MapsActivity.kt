@@ -111,11 +111,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         ref.get().addOnSuccessListener { documentSnapshot ->
             userInfo = documentSnapshot.toObject(User::class.java)
             navView.user_name_text_view_navhead.text = "${userInfo?.username}"
-            navView.full_name_text_view_navhead.text = "${userInfo?.firstName} ${userInfo?.lastName}"
+            val concatenatedFullNameText = "${userInfo?.firstName} ${userInfo?.lastName}"
+            navView.full_name_text_view_navhead.text = concatenatedFullNameText
 
             Picasso.with(this)
                 .load(userInfo?.imageUrl)
-                .resize(400, 400)
+                .resize(200, 200)
                 .centerInside()
                 .transform(CropCircleTransformation())
                 .into(navView.profile_image_view_navhead)
@@ -180,7 +181,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                     getAddress(currentLatLng)
 //                    placeMarker(currentLatLng)
                     val intent = Intent(this@MapsActivity, AddNewPlace::class.java)
-                    println("!!! lat: ${location.latitude}, lng: ${location.longitude}")
+//                    println("!!! lat: ${location.latitude}, lng: ${location.longitude}")
                     intent.putExtra("Latitude", location.latitude).putExtra("Longitude", location.longitude)
                     startActivity(intent)
                 }

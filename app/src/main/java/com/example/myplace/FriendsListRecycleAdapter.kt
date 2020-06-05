@@ -30,7 +30,7 @@ class FriendsListRecycleAdapter(private val context: Context, private val friend
         if (user != null) {
             holder.userNameTextView.text = user.username.toString()
             Picasso.with(context)
-                .load(user?.imageUrl)
+                .load(user.imageUrl)
                 .resize(100, 100)
                 .centerInside()
                 .transform(CropCircleTransformation())

@@ -9,16 +9,20 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 
 class AddNewPlace : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
+    private lateinit var storageRef: StorageReference
 
 //    private val lat: Double = intent.getDoubleExtra("Latitude", 0.0)
 //    private val lng: Double = intent.getDoubleExtra("Longitude", 0.0)
@@ -27,6 +31,7 @@ class AddNewPlace : AppCompatActivity() {
 
     private lateinit var title: EditText
     private lateinit var description: EditText
+    private lateinit var addImageButton: ImageView
 
 //    private lateinit var text: TextView
 
@@ -36,17 +41,26 @@ class AddNewPlace : AppCompatActivity() {
         val lat: Double = intent.getDoubleExtra("Latitude", 0.0)
         val lng: Double = intent.getDoubleExtra("Longitude", 0.0)
 
+        val actionBar = supportActionBar
+        actionBar?.title = "Lägg till ny plats"
+
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
+        storageRef = FirebaseStorage.getInstance().reference.child("placeImages")
 
         currentLocation = LatLng(lat, lng)
         newPlace = Place()
 
         title = findViewById(R.id.titleEditText)
         description = findViewById(R.id.descriptionEditText)
+        addImageButton = findViewById(R.id.add_image_new_place)
 
         findViewById<View>(R.id.layout_add_new_place).setOnClickListener {
             hideKeyboard(it)
+        }
+
+        addImageButton.setOnClickListener {
+
         }
 
     }

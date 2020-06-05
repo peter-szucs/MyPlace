@@ -1,6 +1,9 @@
 package com.example.myplace
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -45,36 +48,18 @@ class FriendsListActivity : AppCompatActivity() {
         recyclerView.adapter?.notifyDataSetChanged()
     }
 
-//    override fun onStart() {
-//        super.onStart()
-//        recyclerView.adapter!!.startListening()
-//    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.friend_list_menu, menu)
+        return true
+    }
 
-    fun getFriendsTwo() {
-        val user = auth.currentUser ?: return
-        var userInfo: User?
-        val dbRef = db.collection("users")
-        dbRef.document(user.uid).addSnapshotListener { snapshot, e ->
-            friendList.clear()
-            if (snapshot != null) {
-                userInfo = snapshot.toObject(User::class.java)
-                if (!userInfo?.friendsList?.isEmpty()!!) {
-                    for (friendID in userInfo?.friendsList!!) {
-                        dbRef.document(friendID).addSnapshotListener { snapshot, e ->
-                            val friend = snapshot?.toObject(User::class.java)
-                            friendList.add(friend)
-//                            println("!!! ${friend?.username}")
-                            recyclerView.adapter?.notifyDataSetChanged()
-
-                        }
-                    }
-                } else {
-                    println("!!! Friendslist is empty")
-                }
-            } else {
-                println("!!!nothing here")
-            }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+        if (id == R.id.add_friend) {
+            val intent = Intent(this, AddFriendActivity::class.java)
+            startActivity(intent)
         }
+        return super.onOptionsItemSelected(item)
     }
 
     fun getFriendsList() {

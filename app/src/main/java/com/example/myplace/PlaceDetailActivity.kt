@@ -39,7 +39,7 @@ class PlaceDetailActivity : AppCompatActivity() {
         if (placeInfo.images?.isNotEmpty()!!) {
             for (imageUrl in placeInfo.images!!) {
                 val view = inflater.inflate(R.layout.place_detail_gallery_view, imageGallery, false)
-                val galleryImage = findViewById<ImageView>(R.id.gallery_image_place_detail)
+                val galleryImage = view.findViewById<ImageView>(R.id.gallery_image_place_detail)
                 Picasso.with(this)
                     .load(imageUrl)
                     .resize(400, 400)
@@ -47,6 +47,11 @@ class PlaceDetailActivity : AppCompatActivity() {
                     .into(galleryImage)
                 imageGallery.addView(view)
             }
+
+        } else {
+            val view = inflater.inflate(R.layout.place_detail_gallery_view, imageGallery, false)
+            val galleryImage = view.findViewById<ImageView>(R.id.gallery_image_place_detail)
+            galleryImage.setImageResource(R.drawable.ic_image)
         }
         var address: MutableList<Address> = mutableListOf()
         if (placeInfo.latitude != null && placeInfo.longitude != null) {
@@ -66,7 +71,7 @@ class PlaceDetailActivity : AppCompatActivity() {
         descriptionTextView.text = placeInfo.description
     }
 
-    private fun getLatLng(lat: Double?, lng: Double?) : LatLng? {
+    private fun getLatLng(lat: Double?, lng: Double?): LatLng? {
         if (lat != null && lng != null) {
             return LatLng(lat, lng)
         } else {
@@ -74,7 +79,7 @@ class PlaceDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun getAddress(loc: LatLng) : MutableList<Address> {
+    private fun getAddress(loc: LatLng): MutableList<Address> {
         val geocoder = Geocoder(this)
         val list = geocoder.getFromLocation(loc.latitude, loc.longitude, 1)
         return list
